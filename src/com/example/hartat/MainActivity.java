@@ -1,5 +1,9 @@
 package com.example.hartat;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -9,7 +13,6 @@ import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -124,6 +127,27 @@ public class MainActivity extends FragmentActivity implements
         }
         return super.onOptionsItemSelected(item);
     }
+    
+    public static List<Location> sortLocations(List<Location> locations, final double myLatitude,final double myLongitude) {
+        Comparator comp = new Comparator<Location>() {
+            @Override
+            public int compare(Location o, Location o2) {
+                float[] result1 = new float[3];
+                android.location.Location.distanceBetween(myLatitude, myLongitude, o.getLatitude(), o.getLongitude(), result1);
+                Float distance1 = result1[0];
+
+                float[] result2 = new float[3];
+                android.location.Location.distanceBetween(myLatitude, myLongitude, o2.getLatitude(), o2.getLongitude(), result2);
+                Float distance2 = result2[0];
+                
+                return distance1.compareTo(distance2);
+            }
+        };
+
+
+        Collections.sort(locations, comp);
+        return locations;
+    }
 
     /**
      * A placeholder fragment containing a simple view.
@@ -165,15 +189,39 @@ public class MainActivity extends FragmentActivity implements
 	public void onConnected(Bundle connectionHint) {
 		Location location = mLocationClient.getLastLocation();
 		if (location != null) {
-			Toast.makeText(this, "GPS location was found!", Toast.LENGTH_SHORT).show();
-			LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+			LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());//new LatLng(42.646198, 21.126280);
 			
 			// zoomirate harten 
-			CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
+			CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17/*12*/);
 			map.animateCamera(cameraUpdate);
-		} else {
-			Toast.makeText(this, "Current location was null, enable GPS on emulator!", Toast.LENGTH_SHORT).show();
-		}
+			
+
+		    	
+//			// Shtoj markerat
+//			map.addMarker(new MarkerOptions().position(new LatLng(42.634998, 21.082141)));
+//			map.addMarker(new MarkerOptions().position(new LatLng(42.640065, 21.101089)));
+//			map.addMarker(new MarkerOptions().position(new LatLng(42.646854, 21.125078)));			
+//			map.addMarker(new MarkerOptions().position(new LatLng(42.650491, 21.138650)));
+//			map.addMarker(new MarkerOptions().position(new LatLng(42.653695, 21.150377)));
+//			map.addMarker(new MarkerOptions().position(new LatLng(42.654319, 21.153016)));
+//			map.addMarker(new MarkerOptions().position(new LatLng(42.655100, 21.162404)));
+//			map.addMarker(new MarkerOptions().position(new LatLng(42.651028, 21.164013)));
+//			map.addMarker(new MarkerOptions().position(new LatLng(42.649134, 21.166717)));
+//			
+//			
+//			// Shto Polylines...		
+//		    map.addPolyline(new PolylineOptions().geodesic(true).width(5).color(Color.BLUE)
+//		            .add(new LatLng(42.634998, 21.082141))  
+//		            .add(new LatLng(42.640065, 21.101089)) 
+//		            .add(new LatLng(42.646854, 21.125078))  
+//		            .add(new LatLng(42.650491, 21.138650))		            
+//		            .add(new LatLng(42.653695, 21.150377))
+//		            .add(new LatLng(42.654319, 21.153016))
+//		            .add(new LatLng(42.655100, 21.162404))		            
+//		            .add(new LatLng(42.651028, 21.164013))
+//		            .add(new LatLng(42.649134, 21.166717))
+//		    );
+		} 
 	}
 
 
