@@ -115,7 +115,8 @@ public class MainActivity extends FragmentActivity implements
 		}
 	}
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {        getMenuInflater().inflate(R.menu.main, menu);
+    public boolean onCreateOptionsMenu(Menu menu) {        
+    		getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
@@ -128,26 +129,6 @@ public class MainActivity extends FragmentActivity implements
         return super.onOptionsItemSelected(item);
     }
     
-    public static List<Location> sortLocations(List<Location> locations, final double myLatitude,final double myLongitude) {
-        Comparator comp = new Comparator<Location>() {
-            @Override
-            public int compare(Location o, Location o2) {
-                float[] result1 = new float[3];
-                android.location.Location.distanceBetween(myLatitude, myLongitude, o.getLatitude(), o.getLongitude(), result1);
-                Float distance1 = result1[0];
-
-                float[] result2 = new float[3];
-                android.location.Location.distanceBetween(myLatitude, myLongitude, o2.getLatitude(), o2.getLongitude(), result2);
-                Float distance2 = result2[0];
-                
-                return distance1.compareTo(distance2);
-            }
-        };
-
-
-        Collections.sort(locations, comp);
-        return locations;
-    }
 
     /**
      * A placeholder fragment containing a simple view.
